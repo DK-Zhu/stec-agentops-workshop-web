@@ -1,0 +1,42 @@
+{
+  "name": "stec-agentops-workshop-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c blue,green \"tsx watch server/index.ts\" \"vite --host 127.0.0.1\"",
+    "build": "tsc -b && vite build && tsc -p server/tsconfig.json",
+    "start": "node server-dist/server/index.js",
+    "typecheck": "tsc -b --pretty false && tsc -p server/tsconfig.json --noEmit --pretty false",
+    "test": "vitest run",
+    "preflight": "tsx scripts/preflight.ts",
+    "agent:provision": "tsx scripts/provision-agent.ts"
+  },
+  "dependencies": {
+    "@aip/agent-sdk": "file:./vendor/aip-agent-sdk-1.2.0.tgz",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "lucide-react": "^0.468.0",
+    "multer": "^2.0.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.18.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.2",
+    "concurrently": "^9.2.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.4",
+    "vitest": "^3.2.4"
+  }
+}
