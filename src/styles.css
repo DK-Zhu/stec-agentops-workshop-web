@@ -184,19 +184,21 @@ button:focus-visible, a:focus-visible, textarea:focus-visible {
 .run-complete { margin-top: 17px; display: flex; align-items: center; gap: 7px; color: var(--success); font-size: 12px; font-weight: 620; }
 .run-metrics { margin-left: auto; color: #8a95a6; font-weight: 450; }
 
-.composer-wrap { flex: none; width: min(880px, calc(100% - 48px)); margin: 0 auto; padding: 10px 0 13px; background: #fff; }
-.composer { min-height: 82px; border: 1px solid #ccd4df; border-radius: 10px; display: flex; align-items: flex-end; gap: 9px; padding: 13px; transition: border 150ms, box-shadow 150ms; }
-.composer.focused { border-color: #7eabf8; box-shadow: 0 0 0 3px rgba(23,105,255,0.08); }
-.composer textarea { flex: 1; min-height: 38px; max-height: 150px; resize: none; border: 0; outline: 0; padding: 8px 4px; color: #273248; line-height: 1.55; font-size: 14px; background: transparent; }
-.composer textarea::placeholder { color: #9aa4b3; }
-.composer-icon { width: 36px; height: 36px; border: 0; background: transparent; color: #667085; display: grid; place-items: center; border-radius: 7px; cursor: pointer; }
-.composer-icon:hover { background: #f2f5f9; color: #344054; }
-.send-button, .stop-button { width: 39px; height: 39px; border: 0; border-radius: 8px; display: grid; place-items: center; color: #fff; cursor: pointer; }
-.send-button { background: var(--blue); }
-.send-button:hover { background: var(--blue-strong); }
-.send-button:disabled { background: #c7d1df; cursor: not-allowed; }
-.stop-button { background: #e25568; }
-.composer-note { margin: 7px 0 0; text-align: center; color: #9aa4b3; font-size: 10px; }
+.composer-wrap { flex: none; width: min(880px, calc(100% - 48px)); margin: 0 auto; padding: 9px 0 12px; background: #fff; }
+.composer { min-height: 64px; border: 1px solid #d7dee8; border-radius: 16px; display: flex; align-items: flex-end; gap: 8px; padding: 10px 10px 10px 12px; background: #fff; box-shadow: 0 5px 20px rgba(35,54,86,.06), 0 1px 2px rgba(35,54,86,.04); transition: border-color 160ms ease, box-shadow 160ms ease; }
+.composer.focused { border-color: #8ab4fb; box-shadow: 0 0 0 3px rgba(23,105,255,.08), 0 7px 24px rgba(35,54,86,.08); }
+.composer textarea { flex: 1; min-height: 40px; max-height: 150px; resize: none; border: 0; outline: 0; padding: 9px 4px 8px; color: #273248; line-height: 1.5; font-size: 14px; background: transparent; }
+.composer textarea::placeholder { color: #98a3b3; }
+.composer-icon { width: 38px; height: 38px; flex: none; border: 0; background: transparent; color: #68758a; display: grid; place-items: center; border-radius: 50%; cursor: pointer; transition: color 150ms ease, background 150ms ease, transform 150ms ease; }
+.composer-icon:hover:not(:disabled) { background: #f1f5fa; color: #344054; transform: translateY(-1px); }
+.composer-icon:disabled { color: #b6bfcc; cursor: not-allowed; }
+.send-button, .stop-button { width: 40px; height: 40px; flex: none; border: 0; border-radius: 50%; display: grid; place-items: center; color: #fff; cursor: pointer; transition: background 150ms ease, box-shadow 150ms ease, transform 150ms ease; }
+.send-button { background: var(--blue); box-shadow: 0 6px 14px rgba(23,105,255,.24); }
+.send-button:hover:not(:disabled) { background: var(--blue-strong); box-shadow: 0 8px 18px rgba(15,81,200,.28); transform: translateY(-1px); }
+.send-button:disabled { background: #d5deea; box-shadow: none; color: #fff; cursor: not-allowed; }
+.stop-button { background: #e25568; box-shadow: 0 6px 14px rgba(226,85,104,.2); }
+.stop-button:hover { background: #cf4359; transform: translateY(-1px); }
+.composer-note { margin: 8px 0 0; text-align: center; color: #a2acba; font-size: 11px; line-height: 1.35; }
 
 .workspace-panel { min-width: 0; border-left: 1px solid var(--border); background: #fbfcfe; padding: 23px 16px; overflow-y: auto; }
 .workspace-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 0 3px 15px; border-bottom: 1px solid var(--border); }

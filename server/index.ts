@@ -7,6 +7,7 @@ import { ApiError } from "@aip/agent-sdk";
 import { MAX_WORKSPACE_FILE_SIZE_BYTES, MAX_WORKSPACE_FILE_SIZE_MIB } from "../shared/contracts.js";
 import type { ApiErrorPayload, WorkshopStreamEvent } from "../shared/contracts.js";
 import { loadConfig } from "./config.js";
+import { restoreMultipartFilename } from "./multipart.js";
 import { createWorkshopService } from "./service.js";
 
 const config = loadConfig();
@@ -113,7 +114,7 @@ app.post(
         return;
       }
       const file = await service.uploadFile(routeParam(req.params.sessionId, "sessionId"), {
-        name: req.file.originalname,
+        name: restoreMultipartFilename(req.file.originalname),
         data: req.file.buffer,
         contentType: req.file.mimetype,
       });
