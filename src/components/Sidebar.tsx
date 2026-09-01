@@ -47,7 +47,7 @@ export function Sidebar({
 }: SidebarProps) {
   return (
     <aside className="sidebar">
-      <section>
+      <section className="sessions-section">
         <h2 className="section-heading">会话</h2>
         <div className="session-list">
           {sessions.map((session) => (
