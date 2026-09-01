@@ -4,6 +4,7 @@ import { pipeline } from "node:stream/promises";
 import express from "express";
 import multer from "multer";
 import { ApiError } from "@aip/agent-sdk";
+import { MAX_WORKSPACE_FILE_SIZE_BYTES, MAX_WORKSPACE_FILE_SIZE_MIB } from "../shared/contracts.js";
 import type { ApiErrorPayload, WorkshopStreamEvent } from "../shared/contracts.js";
 import { loadConfig } from "./config.js";
 import { createWorkshopService } from "./service.js";
@@ -13,7 +14,7 @@ const service = createWorkshopService(config);
 const app = express();
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024, files: 1 },
+  limits: { fileSize: MAX_WORKSPACE_FILE_SIZE_BYTES, files: 1 },
 });
 
 function routeParam(value: string | string[] | undefined, name: string): string {
@@ -140,11 +141,15 @@ app.get("/api/sessions/:sessionId/workspace/files/:name", async (req, res, next)
 
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   const isApiError = error instanceof ApiError;
-  const status = isApiError ? error.status : error instanceof multer.MulterError ? 413 : 500;
+  const isMulterError = error instanceof multer.MulterError;
+  const status = isApiError ? error.status : isMulterError ? 413 : 500;
+  const isFileTooLarge = isMulterError && error.code === "LIMIT_FILE_SIZE";
   const payload: ApiErrorPayload = {
     error: {
-      code: isApiError ? error.code : error instanceof multer.MulterError ? error.code : "internal_error",
-      message: error instanceof Error ? error.message : "Unexpected server error",
+      code: isApiError ? error.code : isMulterError ? error.code : "internal_error",
+      message: isFileTooLarge
+        ? `单个文件不能超过 ${MAX_WORKSPACE_FILE_SIZE_MIB} MiB`
+        : error instanceof Error ? error.message : "Unexpected server error",
     },
   };
   res.status(status).json(payload);

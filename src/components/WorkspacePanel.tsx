@@ -1,5 +1,6 @@
 import { Download, File, FileSpreadsheet, FileText, Folder, UploadCloud } from "lucide-react";
 import { useRef } from "react";
+import { MAX_WORKSPACE_FILE_SIZE_MIB } from "../../shared/contracts";
 import type { WorkspaceFile } from "../../shared/contracts";
 
 interface WorkspacePanelProps {
@@ -59,6 +60,7 @@ export function WorkspacePanel({
         <UploadCloud size={18} />
         {uploading ? "正在上传…" : "上传文件"}
       </button>
+      <p className="upload-limit">单个文件最大 {MAX_WORKSPACE_FILE_SIZE_MIB} MiB</p>
 
       <div className="file-list">
         {files.length === 0 ? (

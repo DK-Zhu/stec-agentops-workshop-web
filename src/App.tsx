@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { MAX_WORKSPACE_FILE_SIZE_BYTES, MAX_WORKSPACE_FILE_SIZE_MIB } from "../shared/contracts";
 import type { BootstrapPayload, WorkshopSession, WorkspaceFile } from "../shared/contracts";
 import { ChatComposer } from "./components/ChatComposer";
 import { ConversationView } from "./components/ConversationView";
@@ -112,6 +113,10 @@ export default function App() {
 
   const uploadFile = async (file: File) => {
     if (!activeSessionId) return;
+    if (file.size > MAX_WORKSPACE_FILE_SIZE_BYTES) {
+      setError(`单个文件不能超过 ${MAX_WORKSPACE_FILE_SIZE_MIB} MiB`);
+      return;
+    }
     setUploading(true);
     setError(null);
     try {

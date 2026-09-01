@@ -1,3 +1,6 @@
+export const MAX_WORKSPACE_FILE_SIZE_MIB = 10;
+export const MAX_WORKSPACE_FILE_SIZE_BYTES = MAX_WORKSPACE_FILE_SIZE_MIB * 1024 * 1024;
+
 export type SessionStatus = "initialized" | "running" | "idle" | "archived";
 
 export interface WorkshopSession {
