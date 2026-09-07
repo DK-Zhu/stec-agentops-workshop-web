@@ -1,10 +1,28 @@
 import { Bot, BrainCircuit, CheckCircle2, LoaderCircle, UserRound } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { ChatItem } from "../features/chat/chat-state";
 import { SubagentActivityCard } from "./SubagentActivityCard";
 import { ToolActivityCard } from "./ToolActivityCard";
+
+function RunningStatus({ startedAt }: { startedAt: string }) {
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const elapsed = Math.max(0, Math.floor((now - Date.parse(startedAt)) / 1000) || 0);
+  const duration = elapsed < 60 ? `${elapsed} 秒` : `${Math.floor(elapsed / 60)} 分 ${elapsed % 60} 秒`;
+  return (
+    <div className="run-pending">
+      <LoaderCircle className="spin" size={16} aria-hidden="true" />
+      <span role="status">仍在运行，等待后续结果</span>
+      <span className="run-elapsed" aria-live="off">本轮已等待 {duration}</span>
+    </div>
+  );
+}
 
 function AssistantMessage({ item }: { item: ChatItem }) {
   const hasWork = Boolean(item.reasoning) || item.subagents.length > 0 || item.tools.length > 0;
@@ -17,8 +35,8 @@ function AssistantMessage({ item }: { item: ChatItem }) {
             {item.reasoning ? (
               <details className="reasoning" open={item.streaming}>
                 <summary>
-                  {item.streaming ? <LoaderCircle className="spin" size={17} /> : <BrainCircuit size={17} />}
-                  <span>{item.streaming ? "Agent 正在思考" : "查看思考过程"}</span>
+                  <BrainCircuit size={17} />
+                  <span>查看思考过程</span>
                 </summary>
                 <p>{item.reasoning}</p>
               </details>
@@ -34,9 +52,9 @@ function AssistantMessage({ item }: { item: ChatItem }) {
           <div className="markdown-body">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.content}</ReactMarkdown>
           </div>
-        ) : item.streaming ? (
-          <div className="answer-waiting"><span /><span /><span /></div>
         ) : null}
+
+        {item.streaming ? <RunningStatus startedAt={item.timestamp} /> : null}
 
         {!item.streaming && item.metrics ? (
           <div className="run-complete">
@@ -64,9 +82,16 @@ function UserMessage({ item }: { item: ChatItem }) {
 }
 
 export function ConversationView({ items, loading }: { items: ChatItem[]; loading: boolean }) {
-  const bottomRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: loading ? "auto" : "smooth", block: "end" });
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const followBottomRef = useRef(true);
+  useLayoutEffect(() => {
+    if (loading || items.length === 0) followBottomRef.current = true;
+    const container = scrollRef.current;
+    if (container && followBottomRef.current) {
+      // Follow streamed updates only while the user is reading at the bottom.
+      // Avoid smooth animations that compete with manual scrolling.
+      container.scrollTop = container.scrollHeight;
+    }
   }, [items, loading]);
 
   if (loading) {
@@ -84,10 +109,16 @@ export function ConversationView({ items, loading }: { items: ChatItem[]; loadin
   }
 
   return (
-    <div className="conversation-scroll">
+    <div
+      className="conversation-scroll"
+      ref={scrollRef}
+      onScroll={(event) => {
+        const container = event.currentTarget;
+        followBottomRef.current = container.scrollHeight - container.scrollTop - container.clientHeight <= 32;
+      }}
+    >
       <div className="conversation-content">
         {items.map((item) => item.role === "user" ? <UserMessage key={item.id} item={item} /> : <AssistantMessage key={item.id} item={item} />)}
-        <div ref={bottomRef} />
       </div>
     </div>
   );

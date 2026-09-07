@@ -183,10 +183,9 @@ button:focus-visible, a:focus-visible, textarea:focus-visible {
 .markdown-body tr:last-child td { border-bottom: 0; }
 .markdown-body th { background: #f5f7fa; color: #445066; font-weight: 660; }
 .markdown-body code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: #174da6; background: #eef4ff; border-radius: 4px; padding: 2px 5px; }
-.answer-waiting { display: flex; gap: 5px; padding: 8px 0; }
-.answer-waiting span { width: 6px; height: 6px; border-radius: 50%; background: #9bacbf; animation: pulse 1.2s infinite ease-in-out; }
-.answer-waiting span:nth-child(2) { animation-delay: 120ms; }
-.answer-waiting span:nth-child(3) { animation-delay: 240ms; }
+.run-pending { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-top: 14px; color: #66758d; font-size: 12px; line-height: 1.6; }
+.run-pending > svg { flex: none; }
+.run-elapsed { color: #8490a3; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .run-complete { margin-top: 17px; display: flex; align-items: center; gap: 7px; color: var(--success); font-size: 12px; font-weight: 620; }
 .run-metrics { margin-left: auto; color: #8a95a6; font-weight: 450; }
 
