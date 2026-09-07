@@ -344,3 +344,7 @@ AGENTOPS_AGENT_ID=agent_xxx
 ### 学员反馈「Agent 配置不一致」时
 
 学员只需把错误中的字段名发给讲师。讲师运行 `npm run agent:provision` 查看差异，确认后使用 `npm run agent:provision -- --update` 同步平台 Agent。
+
+## License
+
+本项目采用 [MIT License](LICENSE)。
